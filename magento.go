@@ -187,6 +187,15 @@ func main() {
 	productApi.RegisterProductRoutes(apiGroup, db)
 	categoryApi.RegisterCategoryAPI(apiGroup, db)
 
+	// Health check endpoint (no auth required)
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, echo.Map{
+			"status": "healthy",
+			"service": "GoGento",
+			"version": "1.0.1",
+		})
+	})
+
 	// Not Autorised HTML Routes
 	html.RegisterProductHTMLRoutes(e, db)
 	html.RegisterCategoryHTMLRoutes(e, db)

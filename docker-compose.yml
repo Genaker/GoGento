@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: gogento-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: gogento-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gogento-app
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_USER: magento
+      MYSQL_PASS: magento
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DB: magento
+      API_USER: admin
+      API_PASS: admin123
+      REDIS_ADDR: redis:6379
+      REDIS_PASS: ""
+      PORT: 8080
+      GORM_LOG: "off"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./var:/app/var
+
+volumes:
+  mysql_data:
+  redis_data:

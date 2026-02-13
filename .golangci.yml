@@ -1,0 +1,52 @@
+run:
+  timeout: 5m
+  tests: true
+  skip-dirs:
+    - vendor
+
+linters:
+  enable:
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Reports suspicious constructs
+    - ineffassign   # Detects ineffectual assignments
+    - staticcheck   # Advanced Go linter
+    - unused        # Checks for unused constants, variables, functions and types
+    - gofmt         # Checks whether code was gofmt-ed
+    - goimports     # Check import statements are formatted according to goimport
+    - misspell      # Finds commonly misspelled English words
+    - gosec         # Inspects source code for security problems
+    - bodyclose     # Checks whether HTTP response body is closed
+    - unconvert     # Remove unnecessary type conversions
+    - prealloc      # Finds slice declarations that could potentially be preallocated
+    - exportloopref # Checks for pointers to enclosing loop variables
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  
+  govet:
+    check-shadowing: true
+  
+  gofmt:
+    simplify: true
+  
+  misspell:
+    locale: US
+  
+  gosec:
+    excludes:
+      - G104 # Audit errors not checked - already covered by errcheck
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck
