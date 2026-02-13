@@ -1,5 +1,12 @@
 # Magento Go API and Frontend
 
+[![Go Version](https://img.shields.io/github/go-mod/go-version/Genaker/GoGento)](https://golang.org/dl/)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Genaker/GoGento)](https://goreportcard.com/report/github.com/Genaker/GoGento)
+[![CI](https://github.com/Genaker/GoGento/actions/workflows/ci.yml/badge.svg)](https://github.com/Genaker/GoGento/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/Genaker/GoGento)](https://github.com/Genaker/GoGento/issues)
+[![GitHub stars](https://img.shields.io/github/stars/Genaker/GoGento)](https://github.com/Genaker/GoGento/stargazers)
+
 A fully functional REST API and HTTP server for Magento using Go, Echo, and GORM.
 
 ## The world’s fastest framework for building e-Commerce MAGENTO websites!
@@ -14,6 +21,52 @@ A fully functional REST API and HTTP server for Magento using Go, Echo, and GORM
 - Modular structure for easy extension
 - **Concurrent-safe global product cache for fast flat product queries**
 - **Flexible product API: fetch all or specific products, with EAV attributes flattened**
+
+## Quick Start
+
+### Using Docker (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/Genaker/GoGento.git
+cd GoGento
+
+# Start all services (MySQL, Redis, and the application)
+make docker-up
+# or
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+```
+
+The API will be available at `http://localhost:8080`
+
+### Using Make (Local Development)
+
+```bash
+# Install dependencies
+make deps
+
+# Copy environment file and configure
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Run the server
+make run
+```
+
+### Manual Setup
+
+See the detailed installation instructions below for manual setup without Docker or Make.
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Security
+
+For reporting security vulnerabilities, please see [SECURITY.md](SECURITY.md).
 
 ## Directory Structure
 ```
