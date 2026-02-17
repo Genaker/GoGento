@@ -2,11 +2,11 @@ package config
 
 import (
 	"fmt"
-	"os"
-	"log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"log"
+	"os"
 	"time"
 )
 
@@ -31,7 +31,7 @@ func NewDB() (*gorm.DB, error) {
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: gormLogger,
+		Logger:      gormLogger,
 		PrepareStmt: true, // Enable prepared statements
 	})
 	if err != nil {
@@ -39,17 +39,17 @@ func NewDB() (*gorm.DB, error) {
 	}
 
 	// Get generic database object
-    sqlDB, err := db.DB()
-    if err != nil {
-        return nil, err
-    }
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
 
-    // Configure connection pool
-    sqlDB.SetMaxOpenConns(25)       // Maximum open connections
-    sqlDB.SetMaxIdleConns(25)       // Maximum idle connections
-    sqlDB.SetConnMaxLifetime(5 * time.Minute)  // Maximum connection lifetime
-    sqlDB.SetConnMaxIdleTime(2 * time.Minute)  // Maximum idle time
-	
+	// Configure connection pool
+	sqlDB.SetMaxOpenConns(25)                 // Maximum open connections
+	sqlDB.SetMaxIdleConns(25)                 // Maximum idle connections
+	sqlDB.SetConnMaxLifetime(5 * time.Minute) // Maximum connection lifetime
+	sqlDB.SetConnMaxIdleTime(2 * time.Minute) // Maximum idle time
+
 	return db, nil
 }
 

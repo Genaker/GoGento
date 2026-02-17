@@ -1,20 +1,20 @@
 package entity
 
 import (
-    "time"
+	"time"
 )
 
 type Flag struct {
-    FlagID     uint      `gorm:"column:flag_id;primaryKey;autoIncrement"`
-    FlagCode   string    `gorm:"column:flag_code;type:varchar(255);not null"`
-    State      uint16    `gorm:"column:state;type:smallint unsigned;not null;default:0"`
-    FlagData   string    `gorm:"column:flag_data;type:mediumtext"`
-    LastUpdate time.Time `gorm:"column:last_update;type:timestamp;not null;default:CURRENT_TIMESTAMP;autoUpdateTime"`
+	FlagID     uint      `gorm:"column:flag_id;primaryKey;autoIncrement"`
+	FlagCode   string    `gorm:"column:flag_code;type:varchar(255);not null"`
+	State      uint16    `gorm:"column:state;type:smallint unsigned;not null;default:0"`
+	FlagData   string    `gorm:"column:flag_data;type:mediumtext"`
+	LastUpdate time.Time `gorm:"column:last_update;type:timestamp;not null;default:CURRENT_TIMESTAMP;autoUpdateTime"`
 }
 
 // TableName specifies the table name
 func (Flag) TableName() string {
-    return "flag"
+	return "flag"
 }
 
 /* Usage Examples:
@@ -43,4 +43,4 @@ func (Flag) TableName() string {
    ```go
    db.Delete(&flag)
    ```
-*/ 
+*/

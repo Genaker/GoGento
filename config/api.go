@@ -4,4 +4,4 @@ package config
 func GetAuthSkipperPaths() []string {
 	//Public API paths
 	return []string{"/api/products", "/api/products/:id"}
-} 
+}

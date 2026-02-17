@@ -55,4 +55,4 @@ func (s *ProductService) UpdateProduct(id uint, input *ProductInput) error {
 
 func (s *ProductService) DeleteProduct(id uint) error {
 	return s.repo.Delete(id)
-} 
+}

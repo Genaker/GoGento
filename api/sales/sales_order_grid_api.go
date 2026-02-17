@@ -11,8 +11,8 @@ import (
 	//"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
 
-	"magento.GO/model/entity/sales"
 	"magento.GO/config"
+	"magento.GO/model/entity/sales"
 )
 
 // RegisterSalesOrderGridRoutes registers the routes for SalesOrderGrid CRUD operations with basic auth
@@ -120,4 +120,4 @@ PUT    /api/orders/:id     - Update order by ID
 DELETE /api/orders/:id     - Delete order by ID
 
 See Echo routing docs: https://echo.labstack.com/docs/routing
-*/ 
+*/

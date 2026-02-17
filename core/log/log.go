@@ -18,9 +18,9 @@ const (
 )
 
 var (
-	logFile   *os.File
-	logger    *log.Logger
-	once      sync.Once
+	logFile *os.File
+	logger  *log.Logger
+	once    sync.Once
 )
 
 // Init initializes the logger and opens the log file
@@ -69,4 +69,4 @@ func logWithLevel(level LogLevel, format string, v ...interface{}) {
 func Info(format string, v ...interface{})  { logWithLevel(INFO, format, v...) }
 func Warn(format string, v ...interface{})  { logWithLevel(WARN, format, v...) }
 func Error(format string, v ...interface{}) { logWithLevel(ERROR, format, v...) }
-func Fatal(format string, v ...interface{}) { logWithLevel(FATAL, format, v...) } 
+func Fatal(format string, v ...interface{}) { logWithLevel(FATAL, format, v...) }

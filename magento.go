@@ -1,24 +1,24 @@
 package main
 
 import (
-	"log"
-	"os"
-	"time"
-	"strconv"
-	"html/template"
 	"fmt"
-	"net/http"
-	"strings"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"magento.GO/config"
-	salesApi "magento.GO/api/sales"
-	productApi "magento.GO/api/product"
+	"html/template"
+	"log"
 	categoryApi "magento.GO/api/category"
-	html "magento.GO/html"
-	"magento.GO/core/registry"
+	productApi "magento.GO/api/product"
+	salesApi "magento.GO/api/sales"
+	"magento.GO/config"
 	"magento.GO/core/cache"
 	corelog "magento.GO/core/log"
+	"magento.GO/core/registry"
+	html "magento.GO/html"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var GlobalRegistry = registry.NewRegistry()
@@ -114,7 +114,7 @@ func main() {
 	corelog.Info("Database connection successful.")
 
 	e := echo.New()
-	
+
 	// Middleware to add cache control headers
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -135,28 +135,28 @@ func main() {
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			start := time.Now()
-			
+
 			// Wrap the response writer
 			w := &responseWriterWithTiming{
 				ResponseWriter: c.Response().Writer,
-				start:         start,
+				start:          start,
 			}
 			c.Response().Writer = w
-			
+
 			err := next(c)
-			
+
 			// If headers haven't been written yet, write them now
 			if !w.headerWritten {
 				duration := time.Since(start)
 				msWithPrecision := float64(duration.Microseconds()) / 1000.0 // Convert to ms with decimals
-				
+
 				w.Header().Set("X-Page-Generation-Time-ms", fmt.Sprintf("%.3f", msWithPrecision))
 				w.Header().Set("X-Page-Generation-Time-μs", strconv.FormatInt(duration.Microseconds(), 10))
 				w.Header().Set("X-Page-Generation-Time", duration.String())
 				w.Header().Set("Server-Timing", fmt.Sprintf("app;dur=%.3f;desc=\"Magento.GO Response Time\"", msWithPrecision))
 				w.headerWritten = true
 			}
-			
+
 			return err
 		}
 	})
@@ -190,7 +190,7 @@ func main() {
 	// Health check endpoint (no auth required)
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, echo.Map{
-			"status": "healthy",
+			"status":  "healthy",
 			"service": "GoGento",
 			"version": "1.0.1",
 		})
@@ -245,7 +245,7 @@ func (r *responseWriterWithTiming) WriteHeader(code int) {
 	if !r.headerWritten {
 		duration := time.Since(r.start)
 		msWithPrecision := float64(duration.Microseconds()) / 1000.0 // Convert to ms with decimals
-		
+
 		r.Header().Set("X-Page-Generation-Time-ms", fmt.Sprintf("%.3f", msWithPrecision))
 		r.Header().Set("Server-Timing", fmt.Sprintf("app;dur=%.3f;desc=\"Magento.GO Response Time\"", msWithPrecision))
 		r.headerWritten = true
@@ -258,4 +258,4 @@ func (r *responseWriterWithTiming) Write(b []byte) (int, error) {
 		r.WriteHeader(http.StatusOK)
 	}
 	return r.ResponseWriter.Write(b)
-} 
+}

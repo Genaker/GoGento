@@ -1,12 +1,12 @@
 package category
 
 import (
-	"net/http"
 	"github.com/labstack/echo/v4"
-	repo "magento.GO/model/repository/category"
 	"gorm.io/gorm"
-	"strconv"
 	categoryEntity "magento.GO/model/entity/category"
+	repo "magento.GO/model/repository/category"
+	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -31,7 +31,7 @@ func RegisterCategoryAPI(g *echo.Group, db *gorm.DB) {
 		}
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"categories": categories,
-			"total": len(categories),
+			"total":      len(categories),
 		})
 	}
 	g.GET("/categories", fullHandler)
@@ -56,7 +56,6 @@ func RegisterCategoryAPI(g *echo.Group, db *gorm.DB) {
 		}
 		return c.JSON(http.StatusOK, cat)
 	})
-
 
 	g.GET("/category/:ids/flat", func(c echo.Context) error {
 		storeID := uint16(0)
@@ -152,7 +151,6 @@ func RegisterCategoryAPI(g *echo.Group, db *gorm.DB) {
 	})
 }
 
-
 /* Usage Example (in your main or route setup):
 
 import (
@@ -167,4 +165,4 @@ func main() {
 	categoryapi.RegisterCategoryAPI(e, db)
 	e.Start(":8080")
 }
-*/ 
+*/

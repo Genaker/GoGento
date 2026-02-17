@@ -2,9 +2,9 @@ package config
 
 import (
 	"os"
-	"sync"
-	"runtime"
 	"path/filepath"
+	"runtime"
+	"sync"
 )
 
 // AppConfig holds global application configuration
@@ -12,11 +12,11 @@ var AppConfig *Config
 var once sync.Once
 
 type Config struct {
-	AppName   string
-	Port      string
-	Env       string
-	Debug     bool
-	MediaUrl  string
+	AppName  string
+	Port     string
+	Env      string
+	Debug    bool
+	MediaUrl string
 	// Add more fields as needed
 }
 

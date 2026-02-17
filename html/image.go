@@ -1,18 +1,18 @@
 package html
 
 import (
-	"net/http"
-	"strconv"
-	"os"
-	"image"
-	"strings"
 	"encoding/base64"
 	"fmt"
-	"io"
-	"path/filepath"
-	"github.com/labstack/echo/v4"
-	"github.com/disintegration/imaging"
 	"github.com/chai2010/webp"
+	"github.com/disintegration/imaging"
+	"github.com/labstack/echo/v4"
+	"image"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
 )
 
 // RegisterImageRoutes registers image-related routes such as /image/webp
@@ -124,7 +124,7 @@ func RegisterImageRoutes(e *echo.Echo) {
 				ratioW := float64(width) / float64(origW)
 				ratioH := float64(height) / float64(origH)
 				var resizeW, resizeH int
-				
+
 				if ratioW < ratioH {
 					// Width is the constraining factor
 					resizeW = width
@@ -176,8 +176,8 @@ func RegisterImageRoutes(e *echo.Echo) {
 		case "webp":
 			c.Response().Header().Set("Content-Type", "image/webp")
 			opts := &webp.Options{
-				Quality: float32(quality),
-				Exact: true,    // Preserve color accuracy
+				Quality:  float32(quality),
+				Exact:    true, // Preserve color accuracy
 				Lossless: true, // Use lossless compression for best quality
 			}
 			webp.Encode(io.MultiWriter(c.Response(), f), img, opts)
@@ -187,4 +187,4 @@ func RegisterImageRoutes(e *echo.Echo) {
 		}
 		return nil
 	})
-} 
+}

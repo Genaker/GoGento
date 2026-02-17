@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"magento.GO/cron"
 	"os"
 	"strings"
-	"magento.GO/cron"
 	//"magento.GO/cron/jobs"
-	"magento.GO/config"
 	"github.com/spf13/cobra"
+	"magento.GO/config"
 )
 
 var jobName string
@@ -37,4 +37,4 @@ var cronStartCmd = &cobra.Command{
 func init() {
 	cronStartCmd.Flags().StringVarP(&jobName, "job", "j", "", "Run a single cron job by name and exit")
 	rootCmd.AddCommand(cronStartCmd)
-} 
+}

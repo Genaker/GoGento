@@ -43,4 +43,4 @@ func (CategoryInt) TableName() string {
    ```go
    db.Delete(&attr)
    ```
-*/ 
+*/

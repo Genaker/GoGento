@@ -6,25 +6,25 @@
 package product
 
 import (
-	productEntity "magento.GO/model/entity/product"
-	"gorm.io/gorm"
 	"fmt"
+	"gorm.io/gorm"
 	entity "magento.GO/model/entity"
-	"sync"
+	productEntity "magento.GO/model/entity/product"
 	"os"
+	"sync"
 )
 
 var (
-	attributeCodeMap map[uint16]string
-	attributeCodeMapOnce sync.Once
-	flatProductsCache = make(map[uint16]map[uint]map[string]interface{})
-	flatProductsCacheOnce  sync.Once
-	flatProductsCacheLock  sync.RWMutex
-	cacheDisabled = os.Getenv("PRODUCT_FLAT_CACHE") == "off"
+	attributeCodeMap      map[uint16]string
+	attributeCodeMapOnce  sync.Once
+	flatProductsCache     = make(map[uint16]map[uint]map[string]interface{})
+	flatProductsCacheOnce sync.Once
+	flatProductsCacheLock sync.RWMutex
+	cacheDisabled         = os.Getenv("PRODUCT_FLAT_CACHE") == "off"
 
 	// Singleton for ProductRepository
 	productRepoInstance *ProductRepository
-	productRepoOnce sync.Once
+	productRepoOnce     sync.Once
 )
 
 // GetProductRepository returns the singleton instance of ProductRepository
@@ -284,13 +284,13 @@ func FlattenProductAttributesWithCodes(product *productEntity.Product, attrMap m
 	// Flatten stock item
 	if product.StockItem.ProductID != 0 {
 		stock := map[string]interface{}{
-			"item_id": product.StockItem.ItemID,
-			"qty": product.StockItem.Qty,
-			"is_in_stock": product.StockItem.IsInStock,
-			"min_qty": product.StockItem.MinQty,
+			"item_id":      product.StockItem.ItemID,
+			"qty":          product.StockItem.Qty,
+			"is_in_stock":  product.StockItem.IsInStock,
+			"min_qty":      product.StockItem.MinQty,
 			"max_sale_qty": product.StockItem.MaxSaleQty,
 			"manage_stock": product.StockItem.ManageStock,
-			"website_id": product.StockItem.WebsiteID,
+			"website_id":   product.StockItem.WebsiteID,
 		}
 		attrs["stock_item"] = stock
 	}
@@ -326,4 +326,4 @@ func LoadAttributeCodeMap(db *gorm.DB) (map[uint16]string, error) {
 		m[a.AttributeID] = a.AttributeCode
 	}
 	return m, nil
-} 
+}

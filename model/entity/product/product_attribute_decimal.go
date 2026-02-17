@@ -1,16 +1,16 @@
 package product
 
 type ProductAttributeDecimal struct {
-    ValueID     uint    `gorm:"column:value_id;primaryKey;autoIncrement"`
-    AttributeID uint16  `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
-    StoreID     uint16  `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
-    EntityID    uint    `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
-    Value       float64 `gorm:"column:value;type:decimal(20,6)"`
+	ValueID     uint    `gorm:"column:value_id;primaryKey;autoIncrement"`
+	AttributeID uint16  `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
+	StoreID     uint16  `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
+	EntityID    uint    `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
+	Value       float64 `gorm:"column:value;type:decimal(20,6)"`
 }
 
 // TableName specifies the table name
 func (ProductAttributeDecimal) TableName() string {
-    return "catalog_product_entity_decimal"
+	return "catalog_product_entity_decimal"
 }
 
 /* Usage Examples:
@@ -41,4 +41,4 @@ func (ProductAttributeDecimal) TableName() string {
    ```go
    db.Delete(&attrDecimal)
    ```
-*/ 
+*/

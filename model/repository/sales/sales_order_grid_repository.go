@@ -1,8 +1,8 @@
 package sales
 
 import (
-	salesEntity "magento.GO/model/entity/sales"
 	"gorm.io/gorm"
+	salesEntity "magento.GO/model/entity/sales"
 )
 
 type SalesOrderGridRepository struct {
@@ -38,4 +38,4 @@ func (r *SalesOrderGridRepository) Update(order *salesEntity.SalesOrderGrid) err
 
 func (r *SalesOrderGridRepository) Delete(id uint) error {
 	return r.db.Delete(&salesEntity.SalesOrderGrid{}, id).Error
-} 
+}

@@ -11,13 +11,13 @@ type ProductJson struct {
 	EntityID   uint           `gorm:"column:entity_id;uniqueIndex:unq_entity_store"` // Changed to uniqueIndex
 	StoreID    uint           `gorm:"column:store_id;uniqueIndex:unq_entity_store;not null;default:0"`
 	Attributes datatypes.JSON `gorm:"column:attribute_json;type:json not null"`
-	
+
 	// Timestamps
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
-	
+
 	// Relationship
-	Product    Product        `gorm:"foreignKey:EntityID;references:ID"`
+	Product Product `gorm:"foreignKey:EntityID;references:ID"`
 }
 
 func (ProductJson) TableName() string {
@@ -52,4 +52,4 @@ type Product struct {
 	// ... other fields
 	JsonData []ProductJson `gorm:"foreignKey:EntityID"`
 }
-*/ 
+*/

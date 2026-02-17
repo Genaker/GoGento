@@ -6,14 +6,14 @@ import (
 )
 
 type ProductMediaGallery struct {
-	ValueID     uint           `gorm:"column:value_id;primaryKey;autoIncrement"`
-	AttributeID uint16         `gorm:"column:attribute_id;not null"`
-	Value       string         `gorm:"column:value;type:varchar(255)"`
-	MediaType   string         `gorm:"column:media_type;type:varchar(32);not null;default:'image'"`
-	Disabled    uint16         `gorm:"column:disabled;not null;default:0"`
+	ValueID     uint   `gorm:"column:value_id;primaryKey;autoIncrement"`
+	AttributeID uint16 `gorm:"column:attribute_id;not null"`
+	Value       string `gorm:"column:value;type:varchar(255)"`
+	MediaType   string `gorm:"column:media_type;type:varchar(32);not null;default:'image'"`
+	Disabled    uint16 `gorm:"column:disabled;not null;default:0"`
 
 	// Relationships
-	Attribute   entity.EavAttribute      `gorm:"foreignKey:AttributeID;references:AttributeID"`
+	Attribute entity.EavAttribute `gorm:"foreignKey:AttributeID;references:AttributeID"`
 }
 
 // TableName specifies the table name
@@ -51,4 +51,4 @@ func (ProductMediaGallery) TableName() string {
    ```go
    db.Delete(&media)
    ```
-*/ 
+*/

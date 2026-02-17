@@ -1,15 +1,15 @@
 package product
 
 type ProductInt struct {
-    ValueID     uint   `gorm:"column:value_id;primaryKey;autoIncrement"`
-    AttributeID uint16 `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
-    StoreID     uint16 `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
-    EntityID    uint   `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
-    Value       int    `gorm:"column:value"`
+	ValueID     uint   `gorm:"column:value_id;primaryKey;autoIncrement"`
+	AttributeID uint16 `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
+	StoreID     uint16 `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
+	EntityID    uint   `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
+	Value       int    `gorm:"column:value"`
 }
 
 func (ProductInt) TableName() string {
-    return "catalog_product_entity_int"
+	return "catalog_product_entity_int"
 }
 
 /* Usage Examples:
@@ -23,4 +23,4 @@ func (ProductInt) TableName() string {
    db.Model(&attr).Update("Value", 2)
 4. Delete:
    db.Delete(&attr)
-*/ 
+*/

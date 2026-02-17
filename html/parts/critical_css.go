@@ -1,8 +1,8 @@
 package parts
 
 import (
-	"os"
 	"log"
+	"os"
 	"sync"
 )
 

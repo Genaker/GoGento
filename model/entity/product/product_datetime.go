@@ -3,15 +3,15 @@ package product
 import "time"
 
 type ProductDatetime struct {
-    ValueID     uint      `gorm:"column:value_id;primaryKey;autoIncrement"`
-    AttributeID uint16    `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
-    StoreID     uint16    `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
-    EntityID    uint      `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
-    Value       time.Time `gorm:"column:value"`
+	ValueID     uint      `gorm:"column:value_id;primaryKey;autoIncrement"`
+	AttributeID uint16    `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
+	StoreID     uint16    `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
+	EntityID    uint      `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
+	Value       time.Time `gorm:"column:value"`
 }
 
 func (ProductDatetime) TableName() string {
-    return "catalog_product_entity_datetime"
+	return "catalog_product_entity_datetime"
 }
 
 /* Usage Examples:
@@ -25,4 +25,4 @@ func (ProductDatetime) TableName() string {
    db.Model(&attr).Update("Value", time.Now())
 4. Delete:
    db.Delete(&attr)
-*/ 
+*/

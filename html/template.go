@@ -1,9 +1,9 @@
 package html
 
 import (
+	"github.com/labstack/echo/v4"
 	"html/template"
 	"io"
-	"github.com/labstack/echo/v4"
 )
 
 // Template is the HTML template renderer
@@ -37,13 +37,13 @@ var templateFuncs = template.FuncMap{
 	"add": func(a, b int) int { return a + b },
 	"sub": func(a, b int) int { return a - b },
 	"mul": func(a, b int) int { return a * b },
-	"div": func(a, b int) int { 
+	"div": func(a, b int) int {
 		if b == 0 {
 			return 0
 		}
-		return a / b 
+		return a / b
 	},
-	
+
 	// Comparison helpers
 	"eq": func(a, b interface{}) bool { return a == b },
 	"ne": func(a, b interface{}) bool { return a != b },
@@ -51,7 +51,7 @@ var templateFuncs = template.FuncMap{
 	"gt": func(a, b int) bool { return a > b },
 	"le": func(a, b int) bool { return a <= b },
 	"ge": func(a, b int) bool { return a >= b },
-	
+
 	// Slice helpers
 	"until": func(count int) []int {
 		s := make([]int, count)
@@ -71,7 +71,7 @@ var templateFuncs = template.FuncMap{
 		}
 		return r
 	},
-	
+
 	// Map helper
 	"dict": func(values ...interface{}) map[string]interface{} {
 		if len(values)%2 != 0 {
@@ -108,4 +108,4 @@ func NewTemplate() *Template {
 	return &Template{
 		Templates: template.Must(template.New("").Funcs(templateFuncs).ParseGlob("html/parts/*.html")),
 	}
-} 
+}

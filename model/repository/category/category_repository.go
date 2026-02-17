@@ -1,22 +1,22 @@
 package category
 
 import (
-	"log"
-	"sync"
 	"gorm.io/gorm"
-	categoryEntity "magento.GO/model/entity/category"
+	"log"
 	entity "magento.GO/model/entity"
+	categoryEntity "magento.GO/model/entity/category"
+	"sync"
 )
 
 var (
 	categoryAttrMetaCache map[uint]entity.EavAttribute
-	categoryAttrMetaOnce sync.Once
-	treeCache     map[uint16][]*CategoryTreeNode
-	treeCacheLock sync.RWMutex
+	categoryAttrMetaOnce  sync.Once
+	treeCache             map[uint16][]*CategoryTreeNode
+	treeCacheLock         sync.RWMutex
 
 	// Singleton for CategoryRepository
 	categoryRepoInstance *CategoryRepository
-	categoryRepoOnce sync.Once
+	categoryRepoOnce     sync.Once
 )
 
 // GetCategoryRepository returns the singleton instance of CategoryRepository
@@ -31,7 +31,7 @@ func GetCategoryRepository(db *gorm.DB) *CategoryRepository {
 type CategoryRepository struct {
 	db *gorm.DB
 	// cache stores categories per store: cache[storeID][categoryID] = CategoryWithAttributes
-	cache map[uint16]map[uint]CategoryWithAttributes
+	cache     map[uint16]map[uint]CategoryWithAttributes
 	cacheLock sync.RWMutex
 }
 
@@ -59,7 +59,7 @@ func (r *CategoryRepository) FetchAllWithAttributes(storeID uint16) ([]categoryE
 // Subsequent calls return the cached data for fast access.
 // Thread-safe for concurrent use.
 func (r *CategoryRepository) FetchAllWithAttributesMap(storeID uint16) (map[uint]CategoryWithAttributes, error) {
-	
+
 	if r.cache == nil {
 		r.cache = make(map[uint16]map[uint]CategoryWithAttributes)
 	}
@@ -69,7 +69,6 @@ func (r *CategoryRepository) FetchAllWithAttributesMap(storeID uint16) (map[uint
 			return cats, nil
 		}
 	}
-
 
 	// Not cached: load from DB
 	var categories []categoryEntity.Category
@@ -113,7 +112,6 @@ func (r *CategoryRepository) InvalidateCache() {
 	treeCache = make(map[uint16][]*CategoryTreeNode)
 	treeCacheLock.Unlock()
 }
-
 
 func (r *CategoryRepository) GetByIDWithAttributesAndFlat(id uint, storeID uint16) (*categoryEntity.Category, map[string]map[string]interface{}, error) {
 	cats, flats, err := r.GetByIDsWithAttributesAndFlat([]uint{id}, storeID)
@@ -195,8 +193,8 @@ func FlattenCategoryAttributesWithLabels(
 				label = *attr.FrontendLabel
 			}
 			flat[attr.AttributeCode] = map[string]interface{}{
-				"value": v.Value,
-				"label": label,
+				"value":    v.Value,
+				"label":    label,
 				"store_id": v.StoreID,
 			}
 		}
@@ -209,8 +207,8 @@ func FlattenCategoryAttributesWithLabels(
 				label = *attr.FrontendLabel
 			}
 			flat[attr.AttributeCode] = map[string]interface{}{
-				"value": v.Value,
-				"label": label,
+				"value":    v.Value,
+				"label":    label,
 				"store_id": v.StoreID,
 			}
 		}
@@ -223,14 +221,14 @@ func FlattenCategoryAttributesWithLabels(
 				label = *attr.FrontendLabel
 			}
 			flat[attr.AttributeCode] = map[string]interface{}{
-				"value": v.Value,
-				"label": label,
+				"value":    v.Value,
+				"label":    label,
 				"store_id": v.StoreID,
 			}
 		}
 	}
 	// Add core fields if needed
-	flat["entity_id"] = map[string]interface{}{ "value": category.EntityID, "label": "Entity ID", "store_id": 0 }
+	flat["entity_id"] = map[string]interface{}{"value": category.EntityID, "label": "Entity ID", "store_id": 0}
 	// ...add more core fields as needed
 	return flat
 }
@@ -317,9 +315,9 @@ func (r *CategoryRepository) GetByIDsWithAttributes(ids []uint, storeID uint16) 
 }
 
 type CategoryTreeNode struct {
-	Category  categoryEntity.Category
+	Category   categoryEntity.Category
 	Attributes map[string]map[string]interface{}
-	Children  []*CategoryTreeNode
+	Children   []*CategoryTreeNode
 }
 
 // BuildCategoryTree builds a tree of categories (with flat attributes) starting from the given parentID (usually 0 for root).
@@ -429,4 +427,3 @@ func (r *CategoryRepository) GetCacheCategory(storeID uint16, id uint) (interfac
 	cat, found := cats[id]
 	return cat, found
 }
-

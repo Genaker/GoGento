@@ -6,32 +6,32 @@ import (
 )
 
 type StockItem struct {
-	ItemID                    uint    `gorm:"column:item_id;primaryKey;autoIncrement"`
-	ProductID                 uint    `gorm:"column:product_id;not null"`
-	StockID                   uint16  `gorm:"column:stock_id;not null"`
-	Qty                       float64 `gorm:"column:qty"`
-	MinQty                    float64 `gorm:"column:min_qty;not null;default:0.0000"`
-	UseConfigMinQty           uint16  `gorm:"column:use_config_min_qty;not null;default:1"`
-	IsQtyDecimal              uint16  `gorm:"column:is_qty_decimal;not null;default:0"`
-	Backorders                uint16  `gorm:"column:backorders;not null;default:0"`
-	UseConfigBackorders       uint16  `gorm:"column:use_config_backorders;not null;default:1"`
-	MinSaleQty                float64 `gorm:"column:min_sale_qty;not null;default:1.0000"`
-	UseConfigMinSaleQty       uint16  `gorm:"column:use_config_min_sale_qty;not null;default:1"`
-	MaxSaleQty                float64 `gorm:"column:max_sale_qty;not null;default:0.0000"`
-	UseConfigMaxSaleQty       uint16  `gorm:"column:use_config_max_sale_qty;not null;default:1"`
-	IsInStock                 uint16  `gorm:"column:is_in_stock;not null;default:0"`
-	LowStockDate              *time.Time `gorm:"column:low_stock_date"`
-	NotifyStockQty            *float64 `gorm:"column:notify_stock_qty"`
-	UseConfigNotifyStockQty   uint16  `gorm:"column:use_config_notify_stock_qty;not null;default:1"`
-	ManageStock               uint16  `gorm:"column:manage_stock;not null;default:0"`
-	UseConfigManageStock      uint16  `gorm:"column:use_config_manage_stock;not null;default:1"`
-	StockStatusChangedAuto    uint16  `gorm:"column:stock_status_changed_auto;not null;default:0"`
-	UseConfigQtyIncrements    uint16  `gorm:"column:use_config_qty_increments;not null;default:1"`
-	QtyIncrements             float64 `gorm:"column:qty_increments;not null;default:0.0000"`
-	UseConfigEnableQtyInc     uint16  `gorm:"column:use_config_enable_qty_inc;not null;default:1"`
-	EnableQtyIncrements       uint16  `gorm:"column:enable_qty_increments;not null;default:0"`
-	IsDecimalDivided          uint16  `gorm:"column:is_decimal_divided;not null;default:0"`
-	WebsiteID                 uint16  `gorm:"column:website_id;not null;default:0"`
+	ItemID                  uint       `gorm:"column:item_id;primaryKey;autoIncrement"`
+	ProductID               uint       `gorm:"column:product_id;not null"`
+	StockID                 uint16     `gorm:"column:stock_id;not null"`
+	Qty                     float64    `gorm:"column:qty"`
+	MinQty                  float64    `gorm:"column:min_qty;not null;default:0.0000"`
+	UseConfigMinQty         uint16     `gorm:"column:use_config_min_qty;not null;default:1"`
+	IsQtyDecimal            uint16     `gorm:"column:is_qty_decimal;not null;default:0"`
+	Backorders              uint16     `gorm:"column:backorders;not null;default:0"`
+	UseConfigBackorders     uint16     `gorm:"column:use_config_backorders;not null;default:1"`
+	MinSaleQty              float64    `gorm:"column:min_sale_qty;not null;default:1.0000"`
+	UseConfigMinSaleQty     uint16     `gorm:"column:use_config_min_sale_qty;not null;default:1"`
+	MaxSaleQty              float64    `gorm:"column:max_sale_qty;not null;default:0.0000"`
+	UseConfigMaxSaleQty     uint16     `gorm:"column:use_config_max_sale_qty;not null;default:1"`
+	IsInStock               uint16     `gorm:"column:is_in_stock;not null;default:0"`
+	LowStockDate            *time.Time `gorm:"column:low_stock_date"`
+	NotifyStockQty          *float64   `gorm:"column:notify_stock_qty"`
+	UseConfigNotifyStockQty uint16     `gorm:"column:use_config_notify_stock_qty;not null;default:1"`
+	ManageStock             uint16     `gorm:"column:manage_stock;not null;default:0"`
+	UseConfigManageStock    uint16     `gorm:"column:use_config_manage_stock;not null;default:1"`
+	StockStatusChangedAuto  uint16     `gorm:"column:stock_status_changed_auto;not null;default:0"`
+	UseConfigQtyIncrements  uint16     `gorm:"column:use_config_qty_increments;not null;default:1"`
+	QtyIncrements           float64    `gorm:"column:qty_increments;not null;default:0.0000"`
+	UseConfigEnableQtyInc   uint16     `gorm:"column:use_config_enable_qty_inc;not null;default:1"`
+	EnableQtyIncrements     uint16     `gorm:"column:enable_qty_increments;not null;default:0"`
+	IsDecimalDivided        uint16     `gorm:"column:is_decimal_divided;not null;default:0"`
+	WebsiteID               uint16     `gorm:"column:website_id;not null;default:0"`
 
 	// Relationships
 	//Product has a field of type StockItem
@@ -77,4 +77,4 @@ func (StockItem) TableName() string {
    ```go
    db.Delete(&stockItem)
    ```
-*/ 
+*/

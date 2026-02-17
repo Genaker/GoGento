@@ -1,15 +1,15 @@
 package product
 
 type ProductVarchar struct {
-    ValueID     uint   `gorm:"column:value_id;primaryKey;autoIncrement"`
-    AttributeID uint16 `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
-    StoreID     uint16 `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
-    EntityID    uint   `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
-    Value       string `gorm:"column:value;type:varchar(255)"`
+	ValueID     uint   `gorm:"column:value_id;primaryKey;autoIncrement"`
+	AttributeID uint16 `gorm:"column:attribute_id;type:smallint unsigned;not null;default:0"`
+	StoreID     uint16 `gorm:"column:store_id;type:smallint unsigned;not null;default:0"`
+	EntityID    uint   `gorm:"column:entity_id;type:int unsigned;not null;default:0"`
+	Value       string `gorm:"column:value;type:varchar(255)"`
 }
 
 func (ProductVarchar) TableName() string {
-    return "catalog_product_entity_varchar"
+	return "catalog_product_entity_varchar"
 }
 
 /* Usage Examples:
@@ -32,4 +32,4 @@ func (ProductVarchar) TableName() string {
 
 4. Delete:
    db.Delete(&attr)
-*/ 
+*/

@@ -93,4 +93,4 @@ userID, ok := reqReg.Get("user_id")
 
 // Delete a request value
 reqReg.Delete("user_id")
-*/ 
+*/

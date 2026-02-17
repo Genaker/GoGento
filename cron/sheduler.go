@@ -2,8 +2,8 @@ package cron
 
 import (
 	"github.com/robfig/cron/v3"
-	"magento.GO/config"
 	"log"
+	"magento.GO/config"
 )
 
 func StartCron() *cron.Cron {

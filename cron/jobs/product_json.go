@@ -6,8 +6,7 @@ import (
 )
 
 func ProductJsonJob(params ...string) {
-    fmt.Println("Running ProductJsonJob at", time.Now())
-    fmt.Println("Params:", params)
-    // Your job logic here
+	fmt.Println("Running ProductJsonJob at", time.Now())
+	fmt.Println("Params:", params)
+	// Your job logic here
 }
-

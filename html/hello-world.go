@@ -1,16 +1,16 @@
 package html
 
 import (
+	"fmt"
+	"github.com/labstack/echo/v4"
+	"html/template"
 	"net/http"
 	"time"
-	"github.com/labstack/echo/v4"
-	"fmt"
-	"html/template"
 )
 
 var (
 	TemplateCompileTime time.Duration
-	Templates *template.Template
+	Templates           *template.Template
 )
 
 func initTemplates() {
@@ -25,15 +25,17 @@ func initTemplates() {
 
 // RegisterHelloWorldRoute registers the /hello-world route
 func RegisterHelloWorldRoute(e *echo.Echo) {
-	initTemplates();
+	initTemplates()
 	e.GET("/hello-world", func(c echo.Context) error {
-		
+
 		// Retrieve the request registry from context
 		reqRegIface := c.Get("RequestRegistry")
 		var start time.Time
 		var showTime bool
 		if reqRegIface != nil {
-			if reqReg, ok := reqRegIface.(interface{ Get(string) (interface{}, bool) }); ok {
+			if reqReg, ok := reqRegIface.(interface {
+				Get(string) (interface{}, bool)
+			}); ok {
 				if v, found := reqReg.Get("request_start"); found {
 					if t, ok := v.(time.Time); ok {
 						start = t
@@ -53,12 +55,12 @@ func RegisterHelloWorldRoute(e *echo.Echo) {
 			execTimeMs = ""
 		}
 		data := map[string]interface{}{
-			"Message": "Hello World",
-			"ExecutionTime": execTime,
-			"ExecutionTimeMs": execTimeMs,
-			"TemplateCompileTime": TemplateCompileTime.String(),
+			"Message":               "Hello World",
+			"ExecutionTime":         execTime,
+			"ExecutionTimeMs":       execTimeMs,
+			"TemplateCompileTime":   TemplateCompileTime.String(),
 			"TemplateCompileTimeMs": fmt.Sprintf("%.10f ms", float64(TemplateCompileTime.Nanoseconds())/1e6),
 		}
 		return c.Render(http.StatusOK, "hello_world.html", data)
 	})
-} 
+}

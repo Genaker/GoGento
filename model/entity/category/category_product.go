@@ -1,15 +1,15 @@
 package category
 
 type CategoryProduct struct {
-    EntityID   uint `gorm:"column:entity_id;primaryKey;autoIncrement"`
-    CategoryID uint `gorm:"column:category_id;type:int unsigned;not null;default:0"`
-    ProductID  uint `gorm:"column:product_id;type:int unsigned;not null;default:0"`
-    Position   int  `gorm:"column:position;not null;default:0"`
+	EntityID   uint `gorm:"column:entity_id;primaryKey;autoIncrement"`
+	CategoryID uint `gorm:"column:category_id;type:int unsigned;not null;default:0"`
+	ProductID  uint `gorm:"column:product_id;type:int unsigned;not null;default:0"`
+	Position   int  `gorm:"column:position;not null;default:0"`
 }
 
 // TableName specifies the table name
 func (CategoryProduct) TableName() string {
-    return "catalog_category_product"
+	return "catalog_category_product"
 }
 
 /* Usage Examples:
@@ -39,4 +39,4 @@ func (CategoryProduct) TableName() string {
    ```go
    db.Delete(&catProd)
    ```
-*/ 
+*/

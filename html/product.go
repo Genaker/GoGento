@@ -1,20 +1,20 @@
 package html
 
 import (
-	"net/http"
-	"strconv"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
-	productRepo "magento.GO/model/repository/product"
 	"html/template"
 	parts "magento.GO/html/parts"
+	productRepo "magento.GO/model/repository/product"
+	"net/http"
+	"strconv"
 	//"io"
+	"bytes"
 	"log"
 	"magento.GO/config"
-	"strings"
 	categoryRepo "magento.GO/model/repository/category"
+	"strings"
 	"sync"
-	"bytes"
 	"time"
 )
 
@@ -129,7 +129,6 @@ func getLastCategoryID(idsVal interface{}) (uint, bool) {
 func RegisterProductHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 	repo := productRepo.GetProductRepository(db)
 	catRepo := categoryRepo.GetCategoryRepository(db)
-	
 
 	e.GET("/product/:ids", func(c echo.Context) error {
 		idsParam := c.Param("ids")
@@ -158,7 +157,7 @@ func RegisterProductHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 			if prod, ok := flatProducts[id]; ok {
 				// Add breadcrumbs if category_ids is present
 				if idsVal, ok := prod["category_ids"]; ok {
-				
+
 					if lastCatID, ok := getLastCategoryID(idsVal); ok && lastCatID > 0 {
 						cat, _, err := catRepo.GetByIDWithAttributesAndFlat(lastCatID, 0)
 						if err == nil && cat != nil && cat.Path != "" {
@@ -200,12 +199,11 @@ func RegisterProductHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 			criticalCSS = ""
 		}
 
-
 		return c.Render(http.StatusOK, "products.html", map[string]interface{}{
-			"Products": products,
-			"Title": "Product Page - " + products[0]["name"].(string) + " - " + products[0]["sku"].(string) + " - Magento.GO",
-			"CriticalCSS": template.CSS(criticalCSS),
-			"MediaUrl": config.AppConfig.MediaUrl,
+			"Products":         products,
+			"Title":            "Product Page - " + products[0]["name"].(string) + " - " + products[0]["sku"].(string) + " - Magento.GO",
+			"CriticalCSS":      template.CSS(criticalCSS),
+			"MediaUrl":         config.AppConfig.MediaUrl,
 			"CategoryTreeHTML": template.HTML(categoryTreeHTML),
 		})
 	})
@@ -213,4 +211,3 @@ func RegisterProductHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 	// Register image routes in a separate file
 	RegisterImageRoutes(e)
 }
-

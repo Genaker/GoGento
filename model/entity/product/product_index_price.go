@@ -1,15 +1,15 @@
 package product
 
 type ProductIndexPrice struct {
-	EntityID         uint    `gorm:"column:entity_id;primaryKey"`
-	CustomerGroupID  uint    `gorm:"column:customer_group_id;primaryKey"`
-	WebsiteID        uint16  `gorm:"column:website_id;primaryKey"`
-	TaxClassID       uint16  `gorm:"column:tax_class_id;default:0"`
-	Price            float64 `gorm:"column:price"`
-	FinalPrice       float64 `gorm:"column:final_price"`
-	MinPrice         float64 `gorm:"column:min_price"`
-	MaxPrice         float64 `gorm:"column:max_price"`
-	TierPrice        float64 `gorm:"column:tier_price"`
+	EntityID        uint    `gorm:"column:entity_id;primaryKey"`
+	CustomerGroupID uint    `gorm:"column:customer_group_id;primaryKey"`
+	WebsiteID       uint16  `gorm:"column:website_id;primaryKey"`
+	TaxClassID      uint16  `gorm:"column:tax_class_id;default:0"`
+	Price           float64 `gorm:"column:price"`
+	FinalPrice      float64 `gorm:"column:final_price"`
+	MinPrice        float64 `gorm:"column:min_price"`
+	MaxPrice        float64 `gorm:"column:max_price"`
+	TierPrice       float64 `gorm:"column:tier_price"`
 }
 
 // TableName specifies the table name
@@ -46,4 +46,4 @@ func (ProductIndexPrice) TableName() string {
    ```go
    db.Delete(&price)
    ```
-*/ 
+*/

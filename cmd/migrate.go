@@ -28,20 +28,20 @@ var migrateCmd = &cobra.Command{
 
 func runSQLMigrations() {
 	dbURL := config.GetMigrationDSN()
-	
+
 	migrationsPath := filepath.Join("file://", config.GetBasePath(), "migrations")
-	
+
 	m, err := migrate.New(migrationsPath, dbURL)
 	if err != nil {
 		fmt.Printf("SQL migration initialization failed: %v\n", err)
 		return
 	}
-	
+
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		fmt.Printf("SQL migration failed: %v\n", err)
 		return
 	}
-	
+
 	fmt.Println("SQL migrations applied successfully")
 }
 
@@ -63,7 +63,7 @@ func runGORMMigrations() {
 		fmt.Printf("GORM AutoMigrate failed: %v\n", err)
 		return
 	}
-	
+
 	fmt.Println("GORM model migrations completed")
 }
 

@@ -1,15 +1,15 @@
 package product
 
 type ProductLink struct {
-    LinkID         uint `gorm:"column:link_id;primaryKey;autoIncrement"`
-    ProductID      uint `gorm:"column:product_id;type:int unsigned;not null;default:0"`
-    LinkedProductID uint `gorm:"column:linked_product_id;type:int unsigned;not null;default:0"`
-    LinkTypeID     uint16 `gorm:"column:link_type_id;type:smallint unsigned;not null;default:0"`
+	LinkID          uint   `gorm:"column:link_id;primaryKey;autoIncrement"`
+	ProductID       uint   `gorm:"column:product_id;type:int unsigned;not null;default:0"`
+	LinkedProductID uint   `gorm:"column:linked_product_id;type:int unsigned;not null;default:0"`
+	LinkTypeID      uint16 `gorm:"column:link_type_id;type:smallint unsigned;not null;default:0"`
 }
 
 // TableName specifies the table name
 func (ProductLink) TableName() string {
-    return "catalog_product_link"
+	return "catalog_product_link"
 }
 
 /* Usage Examples:
@@ -39,4 +39,4 @@ func (ProductLink) TableName() string {
    ```go
    db.Delete(&prodLink)
    ```
-*/ 
+*/

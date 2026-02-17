@@ -31,4 +31,4 @@ func (s *SalesOrderGridService) UpdateOrder(order *entity.SalesOrderGrid) error 
 
 func (s *SalesOrderGridService) DeleteOrder(id uint) error {
 	return s.repo.Delete(id)
-} 
+}

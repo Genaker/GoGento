@@ -1,18 +1,18 @@
 package html
 
 import (
-	"net/http"
-	"strconv"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
-	categoryRepo "magento.GO/model/repository/category"
 	"html/template"
 	"log"
-	parts "magento.GO/html/parts"
-	productRepo "magento.GO/model/repository/product"
 	"magento.GO/config"
+	parts "magento.GO/html/parts"
+	categoryRepo "magento.GO/model/repository/category"
+	productRepo "magento.GO/model/repository/product"
+	"net/http"
+	"strconv"
 	"time"
-	"fmt"
 )
 
 // PaginationData holds all pagination-related information
@@ -97,7 +97,7 @@ func calculatePagination(c echo.Context, totalItems int) PaginationData {
 func RegisterCategoryHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 	repo := categoryRepo.GetCategoryRepository(db)
 	prodRepo := productRepo.GetProductRepository(db)
-	
+
 	e.GET("/category/:id", func(c echo.Context) error {
 		idStr := c.Param("id")
 		id, err := strconv.ParseUint(idStr, 10, 64)
@@ -185,17 +185,17 @@ func RegisterCategoryHTMLRoutes(e *echo.Echo, db *gorm.DB) {
 		return c.Render(http.StatusOK, "parts/category_layout.html", map[string]interface{}{
 			"Category":         cat,
 			"Attributes":       flat,
-			"Title":           title,
-			"Products":        products,
-			"CriticalCSS":     template.CSS(criticalCSS),
+			"Title":            title,
+			"Products":         products,
+			"CriticalCSS":      template.CSS(criticalCSS),
 			"CategoryTreeHTML": template.HTML(categoryTreeHTML),
-			"MediaUrl":        config.AppConfig.MediaUrl,
-			"Page":            pagination.Page,
-			"TotalPages":      pagination.TotalPages,
-			"Limit":           pagination.Limit,
-			"PageNumbers":     pagination.PageNumbers,
-			"PrevPage":        pagination.PrevPage,
-			"NextPage":        pagination.NextPage,
+			"MediaUrl":         config.AppConfig.MediaUrl,
+			"Page":             pagination.Page,
+			"TotalPages":       pagination.TotalPages,
+			"Limit":            pagination.Limit,
+			"PageNumbers":      pagination.PageNumbers,
+			"PrevPage":         pagination.PrevPage,
+			"NextPage":         pagination.NextPage,
 		})
 	})
-} 
+}

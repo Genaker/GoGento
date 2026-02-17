@@ -4,8 +4,8 @@ import (
 	"net/http"
 	//"os"
 	"strconv"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	//"github.com/labstack/echo/v4/middleware"
@@ -26,8 +26,8 @@ func flatProductsHandler(repo *productRepository.ProductRepository) echo.Handler
 		}
 		c.Response().Header().Set("X-Request-Duration-ms", strconv.FormatInt(duration, 10))
 		return c.JSON(http.StatusOK, echo.Map{
-			"products": flatProducts,
-			"count": len(flatProducts),
+			"products":            flatProducts,
+			"count":               len(flatProducts),
 			"request_duration_ms": duration,
 		})
 	}
@@ -47,8 +47,8 @@ func RegisterProductRoutes(api *echo.Group, db *gorm.DB) {
 		}
 		c.Response().Header().Set("X-Request-Duration-ms", strconv.FormatInt(duration, 10))
 		return c.JSON(http.StatusOK, echo.Map{
-			"products": products,
-			"count": len(products),
+			"products":            products,
+			"count":               len(products),
 			"request_duration_ms": duration,
 		})
 	})
@@ -154,10 +154,10 @@ func RegisterProductRoutes(api *echo.Group, db *gorm.DB) {
 
 		c.Response().Header().Set("X-Request-Duration-ms", strconv.FormatInt(duration, 10))
 		return c.JSON(http.StatusOK, echo.Map{
-			"products": result,
-			"count":    len(result),
+			"products":            result,
+			"count":               len(result),
 			"request_duration_ms": duration,
 		})
 	})
 
-} 
+}

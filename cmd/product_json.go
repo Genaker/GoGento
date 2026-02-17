@@ -3,13 +3,13 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"magento.GO/config"
-	productRepo "magento.GO/model/repository/product"
-	"magento.GO/model/entity/product"
-	"time"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"magento.GO/config"
+	"magento.GO/model/entity/product"
+	productRepo "magento.GO/model/repository/product"
+	"time"
 )
 
 var migrateProductsCmd = &cobra.Command{
@@ -17,7 +17,7 @@ var migrateProductsCmd = &cobra.Command{
 	Short: "Migrate product data to JSON table with timing metrics",
 	Run: func(cmd *cobra.Command, args []string) {
 		startTotal := time.Now()
-		
+
 		db, err := config.NewDB()
 		if err != nil {
 			fmt.Printf("Database connection failed: %v\n", err)
@@ -34,7 +34,6 @@ var migrateProductsCmd = &cobra.Command{
 		}
 		fetchDuration := time.Since(startFetch)
 
-
 		startFetchJson := time.Now()
 		var jsonProducts []product.ProductJson
 		// Create map with composite keys
@@ -43,10 +42,10 @@ var migrateProductsCmd = &cobra.Command{
 		if err != nil {
 			fmt.Printf("Failed to fetch products: %v\n", err)
 			return
-		}// Populate the map
+		} // Populate the map
 		for index, entry := range jsonProducts {
 			key := fmt.Sprintf("%d_%d", entry.EntityID, entry.StoreID)
-			existingEntries[key] = index 
+			existingEntries[key] = index
 		}
 		fmt.Printf("Found %d existing product JSON entries\n", len(jsonProducts))
 		fetchJsonDuration := time.Since(startFetchJson)
@@ -63,8 +62,7 @@ var migrateProductsCmd = &cobra.Command{
 
 			// Data processing timing
 			processStart := time.Now()
-			fullData := map[string]interface{}{
-			}
+			fullData := map[string]interface{}{}
 			for k, v := range attributes {
 				fullData[k] = v
 			}
@@ -86,7 +84,7 @@ var migrateProductsCmd = &cobra.Command{
 				existing.Attributes = jsonData
 				existing.UpdatedAt = time.Now()
 				updateBatch = append(updateBatch, existing)
-				
+
 				// Batch update when threshold reached
 				if len(updateBatch) >= batchSize {
 					fmt.Printf("Processing update batch of %d items\n", len(updateBatch))
@@ -98,11 +96,11 @@ var migrateProductsCmd = &cobra.Command{
 			} else {
 				// Collect inserts
 				insertBatch = append(insertBatch, product.ProductJson{
-					EntityID:     productID,
-					StoreID:      0,
+					EntityID:   productID,
+					StoreID:    0,
 					Attributes: jsonData,
 				})
-				
+
 				// Batch insert when threshold reached
 				if len(insertBatch) >= batchSize {
 					fmt.Printf("Processing insert batch of %d items\n", len(insertBatch))
@@ -132,7 +130,7 @@ var migrateProductsCmd = &cobra.Command{
 		}
 
 		totalDuration := time.Since(startTotal)
-		
+
 		fmt.Printf(`
 === Indexing Report ===
 Total products:     %d
@@ -147,7 +145,7 @@ Total time:         %s
 			totalDuration.Round(time.Millisecond),
 			fetchDuration.Round(time.Millisecond),
 			fetchJsonDuration.Round(time.Millisecond),
-			(totalProcessing/time.Duration(len(flatProducts))).Round(time.Microsecond),
+			(totalProcessing / time.Duration(len(flatProducts))).Round(time.Microsecond),
 			totalDB.Round(time.Millisecond))
 	},
 }
@@ -161,7 +159,7 @@ func bulkInsert(db *gorm.DB, batch []product.ProductJson, batchSize int) error {
 	defer func() {
 		fmt.Printf("Inserted batch of %d items in %s\n", len(batch), time.Since(start))
 	}()
-	
+
 	result := db.CreateInBatches(batch, batchSize)
 	if result.Error != nil {
 		return result.Error
@@ -173,7 +171,7 @@ func bulkInsert(db *gorm.DB, batch []product.ProductJson, batchSize int) error {
 func bulkUpdate(db *gorm.DB, batch []product.ProductJson, batchSize int) error {
 	start := time.Now()
 	totalUpdated := int64(0)
-	
+
 	err := db.Transaction(func(tx *gorm.DB) error {
 		for i := 0; i < len(batch); i += batchSize {
 			end := i + batchSize
@@ -181,7 +179,7 @@ func bulkUpdate(db *gorm.DB, batch []product.ProductJson, batchSize int) error {
 				end = len(batch)
 			}
 			chunk := batch[i:end]
-			
+
 			// Create a slice of update parameters
 			updates := make([]map[string]interface{}, len(chunk))
 			for i, item := range chunk {
@@ -207,7 +205,7 @@ func bulkUpdate(db *gorm.DB, batch []product.ProductJson, batchSize int) error {
 		}
 		return nil
 	})
-	
+
 	fmt.Printf("Updated %d records in %s\n", totalUpdated, time.Since(start))
 	return err
 }
