@@ -64,9 +64,41 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
 }
 
 func (r *ProductRepository) FindAll() ([]productEntity.Product, error) {
-	var products []productEntity.Product
-	err := r.db.Preload("Categories").Preload("MediaGallery").Find(&products).Error
-	return products, err
+	return r.FindAllWithLimit(0)
+}
+
+func (r *ProductRepository) FindAllWithLimit(limit int) ([]productEntity.Product, error) {
+	// Get product IDs first
+	var productIDs []uint
+	db := r.db.Model(&productEntity.Product{}).Select("entity_id").Order("entity_id")
+	if limit > 0 {
+		db = db.Limit(limit)
+	}
+	if err := db.Pluck("entity_id", &productIDs).Error; err != nil {
+		return nil, err
+	}
+
+	if len(productIDs) == 0 {
+		return []productEntity.Product{}, nil
+	}
+
+	// Fetch in batches to avoid placeholder limit
+	var allProducts []productEntity.Product
+	for i := 0; i < len(productIDs); i += batchSize {
+		end := i + batchSize
+		if end > len(productIDs) {
+			end = len(productIDs)
+		}
+		var batch []productEntity.Product
+		err := r.db.Preload("Categories").Preload("MediaGallery").
+			Where("entity_id IN ?", productIDs[i:end]).
+			Find(&batch).Error
+		if err != nil {
+			return nil, err
+		}
+		allProducts = append(allProducts, batch...)
+	}
+	return allProducts, nil
 }
 
 func (r *ProductRepository) FindByID(id uint) (*productEntity.Product, error) {
@@ -134,9 +166,31 @@ func (r *ProductRepository) FetchWithAllAttributes(storeID ...uint16) ([]product
 	return products, err
 }
 
-// fetchFlatProducts loads products with all EAV attributes. Uses GORM Preload with IN clauses
-// (one query per relation), so no N+1: ~10 batch queries total regardless of product count.
+const batchSize = 1000 // MySQL placeholder limit is 65535; batching avoids "too many placeholders" error
+
+// fetchFlatProducts loads products with all EAV attributes. Uses batched fetching
+// to avoid MySQL's prepared statement placeholder limit (65535).
 func (r *ProductRepository) fetchFlatProducts(ids []uint, storeID uint16) (map[uint]map[string]interface{}, error) {
+	return r.fetchFlatProductsWithLimit(ids, storeID, 0)
+}
+
+func (r *ProductRepository) fetchFlatProductsWithLimit(ids []uint, storeID uint16, limit int) (map[uint]map[string]interface{}, error) {
+	// If specific IDs provided and within batch size, fetch directly
+	if ids != nil && len(ids) > 0 && len(ids) <= batchSize {
+		return r.fetchFlatProductsBatch(ids, storeID)
+	}
+
+	// If specific IDs provided but too many, batch them
+	if ids != nil && len(ids) > batchSize {
+		return r.fetchFlatProductsInBatches(ids, storeID)
+	}
+
+	// No IDs specified - fetch all products in batches
+	return r.fetchAllFlatProductsInBatches(storeID, limit)
+}
+
+// fetchFlatProductsBatch fetches a single batch of products (up to batchSize)
+func (r *ProductRepository) fetchFlatProductsBatch(ids []uint, storeID uint16) (map[uint]map[string]interface{}, error) {
 	var products []productEntity.Product
 	db := r.db.
 		Preload("Categories").
@@ -149,12 +203,11 @@ func (r *ProductRepository) fetchFlatProducts(ids []uint, storeID uint16) (map[u
 		Preload("Texts", "store_id = ?", storeID).
 		Preload("Datetimes", "store_id = ?", storeID)
 
-	if ids != nil && len(ids) > 0 {
+	if len(ids) > 0 {
 		db = db.Where("entity_id IN ?", ids)
 	}
 
-	err := db.Find(&products).Error
-	if err != nil {
+	if err := db.Find(&products).Error; err != nil {
 		return nil, err
 	}
 
@@ -164,14 +217,62 @@ func (r *ProductRepository) fetchFlatProducts(ids []uint, storeID uint16) (map[u
 		id := products[i].EntityID
 		flatProducts[id] = FlattenProductAttributesWithCodes(&products[i], attrMap)
 	}
-
 	return flatProducts, nil
 }
 
+// fetchFlatProductsInBatches fetches specific IDs in batches
+func (r *ProductRepository) fetchFlatProductsInBatches(ids []uint, storeID uint16) (map[uint]map[string]interface{}, error) {
+	result := make(map[uint]map[string]interface{}, len(ids))
+
+	for i := 0; i < len(ids); i += batchSize {
+		end := i + batchSize
+		if end > len(ids) {
+			end = len(ids)
+		}
+		batch, err := r.fetchFlatProductsBatch(ids[i:end], storeID)
+		if err != nil {
+			return nil, err
+		}
+		for id, prod := range batch {
+			result[id] = prod
+		}
+	}
+	return result, nil
+}
+
+// fetchAllFlatProductsInBatches fetches all products using offset-based pagination
+func (r *ProductRepository) fetchAllFlatProductsInBatches(storeID uint16, limit int) (map[uint]map[string]interface{}, error) {
+	// First, get all product IDs
+	var productIDs []uint
+	db := r.db.Model(&productEntity.Product{}).Select("entity_id").Order("entity_id")
+	if limit > 0 {
+		db = db.Limit(limit)
+	}
+	if err := db.Pluck("entity_id", &productIDs).Error; err != nil {
+		return nil, err
+	}
+
+	if len(productIDs) == 0 {
+		return make(map[uint]map[string]interface{}), nil
+	}
+
+	// Fetch in batches
+	return r.fetchFlatProductsInBatches(productIDs, storeID)
+}
+
 func (r *ProductRepository) FetchWithAllAttributesFlat(storeID ...uint16) (map[uint]map[string]interface{}, error) {
+	return r.FetchWithAllAttributesFlatWithLimit(0, storeID...)
+}
+
+func (r *ProductRepository) FetchWithAllAttributesFlatWithLimit(limit int, storeID ...uint16) (map[uint]map[string]interface{}, error) {
 	sid := uint16(0)
 	if len(storeID) > 0 {
 		sid = storeID[0]
+	}
+
+	// If limit specified, don't use cache - fetch directly
+	if limit > 0 {
+		return r.fetchFlatProductsWithLimit(nil, sid, limit)
 	}
 
 	if cacheDisabled() {

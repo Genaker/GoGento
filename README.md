@@ -48,6 +48,7 @@ MAGENTO_CRYPT_KEY=your_crypt_key  # From app/etc/env.php for Realtime API auth
 | **Product Import** | Magmi alternative. Bulk CSV import with parallel EAV writes. ~127k products/min. | [rest-api.md](doc/rest-api.md) |
 | **Cron jobs** | Scheduled and on-demand. `go run cli.go cron:start --job Name`. | [cron.md](doc/cron.md) |
 | **Extending** | Add entities, custom resolvers, GraphQL extensions. Tailwind. | [extending.md](doc/extending.md) |
+| **Testing** | SQLite unit tests (no Magento needed) + MySQL integration tests. | [testing.md](doc/testing.md) |
 
 ## Quick Start
 
@@ -92,9 +93,22 @@ GoGento's importer solves all of these:
 - **Dual interface** — CLI (`products:import`) for files, REST API (`POST /api/stock/import`) for programmatic use
 - **Single binary** — no PHP, no Composer, no JVM; deploy and run
 
-### Benchmark: 100,000 Products
+### Benchmark: 100,000 Products (MySQL CE)
 
 Each product has 50 EAV attributes (20 varchar, 10 int, 10 decimal, 5 text, 5 datetime).
+
+| Metric | Value |
+|--------|-------|
+| Products imported | 100,000 |
+| EAV rows upserted | 5,000,000 |
+| Total time | 55.8 seconds |
+| **Throughput** | **1,792 products/sec** |
+| **Throughput** | **107,493 products/min** |
+| EAV row rate | 89,578 rows/sec |
+
+> Tested on real Magento MySQL database (Community Edition schema). Performance on production systems may vary based on disk I/O, indexes, and connection pool settings.
+
+### Benchmark: 100,000 Products (SQLite)
 
 | Metric | Value |
 |--------|-------|
@@ -105,7 +119,7 @@ Each product has 50 EAV attributes (20 varchar, 10 int, 10 decimal, 5 text, 5 da
 | **Throughput** | **~127,000 products/min** |
 | EAV row rate | ~106,000 rows/sec |
 
-> Tested with SQLite (in-memory). Real MySQL/MariaDB performance will vary depending on disk I/O, indexes, and connection pool settings — but the Go-side processing overhead is minimal.
+> SQLite in-memory benchmark demonstrates Go-side processing overhead is minimal.
 
 ### Benchmark: Stock Import (MySQL)
 

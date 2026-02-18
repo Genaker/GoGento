@@ -11,10 +11,10 @@ var IsEnterprise bool
 
 // Product represents catalog_product_entity table.
 // JSON tags use omitempty to exclude zero-value fields from serialization,
-// keeping API responses compact (e.g., RowID=0 omitted for CE, EntityID=0 for EE).
+// keeping API responses compact (e.g., RowID=0 omitted for CE, EntityID=0 for EE if null).
 type Product struct {
 	EntityID        uint      `gorm:"column:entity_id;primaryKey;autoIncrement" json:"entity_id,omitempty"`
-	RowID           uint      `gorm:"column:row_id;index" json:"row_id,omitempty"`
+	RowID           uint      `gorm:"-" json:"row_id,omitempty"`
 	AttributeSetID  uint16    `gorm:"column:attribute_set_id;type:smallint unsigned;not null;default:0" json:"attribute_set_id,omitempty"`
 	TypeID          string    `gorm:"column:type_id;type:varchar(32);not null;default:simple" json:"type_id,omitempty"`
 	SKU             string    `gorm:"column:sku;type:varchar(64);not null" json:"sku,omitempty"`
@@ -22,8 +22,8 @@ type Product struct {
 	RequiredOptions uint16    `gorm:"column:required_options;type:smallint unsigned;not null;default:0" json:"required_options,omitempty"`
 	CreatedAt       time.Time `gorm:"column:created_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;autoCreateTime" json:"created_at,omitempty"`
 	UpdatedAt       time.Time `gorm:"column:updated_at;type:timestamp;not null;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"updated_at,omitempty"`
-	CreatedIn       uint64    `gorm:"column:created_in;type:bigint unsigned" json:"created_in,omitempty"`
-	UpdatedIn       uint64    `gorm:"column:updated_in;type:bigint unsigned" json:"updated_in,omitempty"`
+	CreatedIn       uint64    `gorm:"-" json:"created_in,omitempty"`
+	UpdatedIn       uint64    `gorm:"-" json:"updated_in,omitempty"`
 	Categories         []category.Category   `gorm:"many2many:catalog_category_product;joinForeignKey:ProductID;joinReferences:CategoryID" json:"categories,omitempty"`
 	Varchars           []ProductVarchar      `gorm:"foreignKey:EntityID;references:EntityID" json:"varchars,omitempty"`
 	Ints               []ProductInt          `gorm:"foreignKey:EntityID;references:EntityID" json:"ints,omitempty"`

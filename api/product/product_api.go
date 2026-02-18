@@ -22,7 +22,13 @@ func init() {
 func flatProductsHandler(repo *productRepository.ProductRepository) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		start := time.Now()
-		flatProducts, err := repo.FetchWithAllAttributesFlat()
+		limit := 0
+		if limitParam := c.QueryParam("limit"); limitParam != "" {
+			if l, err := strconv.Atoi(limitParam); err == nil && l > 0 {
+				limit = l
+			}
+		}
+		flatProducts, err := repo.FetchWithAllAttributesFlatWithLimit(limit)
 		duration := time.Since(start).Milliseconds()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error(), "request_duration_ms": duration})
@@ -43,7 +49,13 @@ func RegisterProductRoutes(api *echo.Group, db *gorm.DB) {
 
 	g.GET("", func(c echo.Context) error {
 		start := time.Now()
-		products, err := service.ListProducts()
+		limit := 0
+		if limitParam := c.QueryParam("limit"); limitParam != "" {
+			if l, err := strconv.Atoi(limitParam); err == nil && l > 0 {
+				limit = l
+			}
+		}
+		products, err := repo.FindAllWithLimit(limit)
 		duration := time.Since(start).Milliseconds()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error(), "request_duration_ms": duration})
